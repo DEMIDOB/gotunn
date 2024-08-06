@@ -39,13 +39,18 @@ func ClientPolling(ip net.IP, serverPort int, targetPort int) error {
 				return err
 			}
 
+			logger.Println("Sent!")
+
 			data, err := util.ReadFromConnection(conn)
 			currentRequest = types.ParsePublicRequest(data)
+			logger.Println("Received something")
 
 			currentResponse, err = AttackTarget(targetAddr, currentRequest)
 			if err != nil {
 				return err
 			}
+
+			logger.Println("Got a response from the target!")
 		}
 
 		err = conn.Close()
