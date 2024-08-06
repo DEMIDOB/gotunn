@@ -31,7 +31,9 @@ func ListenToTargets(port int, publicRequestCh chan types.PublicRequest, publicR
 		logger.Println("Accepted a new connection!")
 
 		for {
+			logger.Println("Waiting for data from the client...")
 			data, err := util.ReadFromConnection(conn)
+			logger.Println("Got it!")
 			//dataStr := string(data)
 			//logger.Println("Received", dataStr)
 
@@ -40,11 +42,13 @@ func ListenToTargets(port int, publicRequestCh chan types.PublicRequest, publicR
 			// and needs to be placed to the channel
 			publicResponse := types.ParsePublicResponse(data)
 			if len(publicResponse.ID) > 0 {
+				logger.Println("Putting to the channel...")
 				publicResponseCh <- publicResponse
 			} else {
 				logger.Println("No id!")
 			}
 
+			logger.Println("Waiting for a public request...")
 			// wait for an incoming request to the target
 			publicRequest := <-publicRequestCh
 			logger.Println("Received a public request")
@@ -54,6 +58,8 @@ func ListenToTargets(port int, publicRequestCh chan types.PublicRequest, publicR
 			if err != nil {
 				logger.Println("Failed to forward the public request to the target:", err)
 			}
+
+			logger.Println("Successfully forwarded the request!")
 		}
 
 		err = conn.Close()

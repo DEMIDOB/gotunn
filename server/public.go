@@ -33,21 +33,29 @@ func ListenToPublic(port int, publicRequestCh chan types.PublicRequest, publicRe
 			defer conn.Close()
 
 			for {
+				logger.Println("Waiting for client data...")
 				data, err := util.ReadFromConnection(conn)
 				//logger.Println("Received", string(data))
+				logger.Println("Receieved data!")
 
 				publicRequest := types.NewPublicRequest(data)
 				publicRequestCh <- publicRequest
+				logger.Println("Put to the channel")
 
+				logger.Println("Waiting for response channel...")
 				publicResponse := <-publicResponseCh
+				logger.Println("Got from response channel!")
+
 				if publicResponse.ID != publicRequest.ID {
 					log.Panic("Response-Request identifiers do not match!")
 				}
 
+				logger.Println("Reporting back...")
 				_, err = conn.Write(publicResponse.Data)
 				if err != nil {
 					logger.Println("Failed to forward the public request to the target:", err)
 				}
+				logger.Println("Done!")
 			}
 		}()
 
