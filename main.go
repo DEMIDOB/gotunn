@@ -33,9 +33,9 @@ func main() {
 		}
 	} else {
 		// temporarily assume there is only one server with only one port to listen
-		//ip := net.IPv4(109, 201, 65, 61)
+		ip := net.IPv4(109, 201, 65, 61)
 		//ip := net.IPv4(10, 8, 0, 4)
-		ip := net.IPv4(127, 0, 0, 1)
+		//ip := net.IPv4(127, 0, 0, 1)
 
 		serverPort := 2004
 		targetPort := *port
