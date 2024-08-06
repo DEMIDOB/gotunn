@@ -30,28 +30,30 @@ func ListenToTargets(port int, publicRequestCh chan types.PublicRequest, publicR
 
 		logger.Println("Accepted a new connection!")
 
-		data, err := util.ReadFromConnection(conn)
-		//dataStr := string(data)
-		//logger.Println("Received", dataStr)
+		for {
+			data, err := util.ReadFromConnection(conn)
+			//dataStr := string(data)
+			//logger.Println("Received", dataStr)
 
-		// publicResponse may or may not be an actual response to the public
-		// if there is a non-empty ID, it is an actual response
-		// and needs to be placed to the channel
-		publicResponse := types.ParsePublicResponse(data)
-		if len(publicResponse.ID) > 0 {
-			publicResponseCh <- publicResponse
-		} else {
-			logger.Println("No id!")
-		}
+			// publicResponse may or may not be an actual response to the public
+			// if there is a non-empty ID, it is an actual response
+			// and needs to be placed to the channel
+			publicResponse := types.ParsePublicResponse(data)
+			if len(publicResponse.ID) > 0 {
+				publicResponseCh <- publicResponse
+			} else {
+				logger.Println("No id!")
+			}
 
-		// wait for an incoming request to the target
-		publicRequest := <-publicRequestCh
-		logger.Println("Received a public request")
+			// wait for an incoming request to the target
+			publicRequest := <-publicRequestCh
+			logger.Println("Received a public request")
 
-		// forward the request
-		_, err = conn.Write(publicRequest.Data)
-		if err != nil {
-			logger.Println("Failed to forward the public request to the target:", err)
+			// forward the request
+			_, err = conn.Write(publicRequest.Data)
+			if err != nil {
+				logger.Println("Failed to forward the public request to the target:", err)
+			}
 		}
 
 		err = conn.Close()

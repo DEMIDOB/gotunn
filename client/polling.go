@@ -31,19 +31,21 @@ func ClientPolling(ip net.IP, serverPort int, targetPort int) error {
 			return err
 		}
 
-		logger.Println("Sending the message...")
+		for {
+			logger.Println("Sending the message...")
 
-		_, err = conn.Write(prepareResponseData(currentResponse))
-		if err != nil {
-			return err
-		}
+			_, err = conn.Write(prepareResponseData(currentResponse))
+			if err != nil {
+				return err
+			}
 
-		data, err := util.ReadFromConnection(conn)
-		currentRequest = types.ParsePublicRequest(data)
+			data, err := util.ReadFromConnection(conn)
+			currentRequest = types.ParsePublicRequest(data)
 
-		currentResponse, err = AttackTarget(targetAddr, currentRequest)
-		if err != nil {
-			return err
+			currentResponse, err = AttackTarget(targetAddr, currentRequest)
+			if err != nil {
+				return err
+			}
 		}
 
 		err = conn.Close()

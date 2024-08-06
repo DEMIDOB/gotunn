@@ -29,25 +29,31 @@ func ListenToPublic(port int, publicRequestCh chan types.PublicRequest, publicRe
 
 		logger.Println("Accepted a new connection!")
 
-		data, err := util.ReadFromConnection(conn)
-		//logger.Println("Received", string(data))
+		go func() {
+			defer conn.Close()
 
-		publicRequest := types.NewPublicRequest(data)
-		publicRequestCh <- publicRequest
+			for {
+				data, err := util.ReadFromConnection(conn)
+				//logger.Println("Received", string(data))
 
-		publicResponse := <-publicResponseCh
-		if publicResponse.ID != publicRequest.ID {
-			log.Panic("Response-Request identifiers do not match!")
-		}
+				publicRequest := types.NewPublicRequest(data)
+				publicRequestCh <- publicRequest
 
-		_, err = conn.Write(publicResponse.Data)
-		if err != nil {
-			logger.Println("Failed to forward the public request to the target:", err)
-		}
+				publicResponse := <-publicResponseCh
+				if publicResponse.ID != publicRequest.ID {
+					log.Panic("Response-Request identifiers do not match!")
+				}
 
-		err = conn.Close()
-		if err != nil {
-			return err
-		}
+				_, err = conn.Write(publicResponse.Data)
+				if err != nil {
+					logger.Println("Failed to forward the public request to the target:", err)
+				}
+			}
+		}()
+
+		//err = conn.Close()
+		//if err != nil {
+		//	return err
+		//}
 	}
 }
