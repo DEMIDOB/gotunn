@@ -24,6 +24,12 @@ func ClientPolling(ip net.IP, serverPort int, targetPort int) error {
 	var currentRequest types.PublicRequest
 	var currentResponse types.PublicResponse
 
+	targetConn, err := net.DialTCP("tcp", nil, &targetAddr)
+	if err != nil {
+		return err
+	}
+	defer targetConn.Close()
+
 	for {
 		logger.Println("Dialing...")
 		conn, err := net.DialTCP("tcp", nil, &serverAddr)
@@ -45,7 +51,15 @@ func ClientPolling(ip net.IP, serverPort int, targetPort int) error {
 			currentRequest = types.ParsePublicRequest(data)
 			logger.Println("Received something")
 
-			currentResponse, err = AttackTarget(targetAddr, currentRequest)
+			_, err = targetConn.Write(currentRequest.Data)
+			if err != nil {
+				return err
+			}
+
+			data, err = util.ReadFromConnection(targetConn)
+			currentResponse.Data = data
+
+			//currentResponse, err = AttackTarget(targetAddr, currentRequest)
 			if err != nil {
 				return err
 			}
