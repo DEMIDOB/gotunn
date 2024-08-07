@@ -1,16 +1,36 @@
 package util
 
 import (
+	"log"
 	"net"
 	"time"
 )
 
 const (
-	BufferSize  = 1
+	BufferSize  = 2048
 	ReadTimeout = time.Millisecond
 )
 
 func ReadFromConnection(conn net.Conn) ([]byte, error) {
+	//data := make([]byte, 0, BufferSize)
+	buffer := make([]byte, BufferSize)
+
+	bytesRead, err := conn.Read(buffer)
+	if err != nil {
+		log.Println("Failed to read the buffer!")
+		return buffer, err
+	}
+
+	data := make([]byte, bytesRead)
+
+	for i := 0; i < bytesRead; i++ {
+		data[i] = buffer[i]
+	}
+
+	return data, nil
+}
+
+func _ReadFromConnection(conn net.Conn) ([]byte, error) {
 	data := make([]byte, 0, BufferSize)
 
 	buff := make([]byte, BufferSize)

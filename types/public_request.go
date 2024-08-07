@@ -21,6 +21,7 @@ func NewPublicRequest(data []byte) PublicRequest {
 
 func ParsePublicRequest(rawData []byte) PublicRequest {
 	rawDataStr := string(rawData)
+	println("got", rawDataStr)
 
 	publicResponse := PublicRequest{Data: rawData}
 	split := strings.Split(rawDataStr, config.ResponseIdSep)

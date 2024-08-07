@@ -33,7 +33,7 @@ func ListenToTargets(port int, publicRequestCh chan types.PublicRequest, publicR
 		for {
 			logger.Println("Waiting for data from the client...")
 			data, err := util.ReadFromConnection(conn)
-			logger.Println("Got it!")
+			logger.Println("Got it!", string(data))
 			//dataStr := string(data)
 			//logger.Println("Received", dataStr)
 
