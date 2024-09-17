@@ -1,3 +1,15 @@
 .idea/
+.vscode/
 
 go.sum
+
+tunnel
+
+build/
+
+tmp/
+temp/
+
+*.tmp
+*.temp
+

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"flag"
 	"log"
 	"net"
@@ -8,6 +9,26 @@ import (
 	"tunnel/server"
 	"tunnel/types"
 )
+
+func printCoolAscii() {
+	// like in SpringBoot and staff
+	// Even though it doesnt look fine now it will drink some coffee and get better at runtime
+	// DONT TRY TO FIX WHAT IS ALREADY WORKING
+	fmt.Printf("________________________________________________________________________________________________________________\n")
+	fmt.Printf("||-------------------------------------------------------------------------------------------------------------|\n")
+	fmt.Printf("||             _______        ________     ____________  __         __   __  ______      __  ______           ||\n")
+	fmt.Printf("||           //------\\\\      //------\\\\    ------------  ||         ||   || //----\\\\     || //----\\\\          ||\n")
+	fmt.Printf("||          //              //        \\\\        ||       ||         ||   ||//      \\\\    ||//      \\\\         ||\n")
+	fmt.Printf("||         //              //          \\\\       ||       ||         ||   ||/        \\\\   ||/        \\\\        ||\n")
+	fmt.Printf("||         ||  _________   ||          ||       ||       ||         ||   ||         ||   ||         ||        ||\n")
+	fmt.Printf("||         \\\\  -------//   \\\\          //       ||       \\\\         //   ||         ||   ||         ||        ||\n")
+	fmt.Printf("||          \\\\       //     \\\\        //        ||        \\\\       //    ||         ||   ||         ||        ||\n")
+	fmt.Printf("||           \\\\_____//       \\\\______//         ||         \\\\_____//     ||         ||   ||         ||        ||\n")
+	fmt.Printf("||            -------         --------          ||           -----       ||         ||   ||         ||        ||\n")
+	fmt.Printf("||                                                                                                            ||\n")
+	fmt.Printf("|--------------------------------------------------------------------------------------------------------------|\n")
+	fmt.Printf("----------------------------------------------------------------------------------------------------------------\n\n\n")
+}
 
 func main() {
 	isServerPtr := flag.Bool("s", false, "Whether to run in server mode")
@@ -17,6 +38,7 @@ func main() {
 	isServer := *isServerPtr
 
 	if isServer {
+		printCoolAscii()
 		publicRequestCh := make(chan types.PublicRequest)
 		publicResponseCh := make(chan types.PublicResponse)
 
